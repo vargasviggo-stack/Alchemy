@@ -40,7 +40,7 @@ dependencies:
   crypto: ^3.0.3
   custom_navigator:
    git:
-      url: m-hamzashakeel/custom_navigator.git
+      url: https://m-hamzashakeel/custom_navigator.git
       ref: master
   device_info_plus: ^11.1.0
   draggable_scrollbar: ^0.1.0
