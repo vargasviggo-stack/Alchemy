@@ -17,24 +17,23 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la versión estable actual de 2026 para tener Dart 3.8+
-          flutter-version: '3.33.0' 
+          # Usamos la 3.30.0, que es la versión estable compatible con Dart 3.8+
+          flutter-version: '3.30.0' 
           channel: 'stable'
           cache: true
 
       - name: Install dependencies
         run: |
-          # Eliminamos el lock viejo para que no choque con el nuevo SDK
+          # Limpieza total para que no queden rastros de versiones viejas
           rm -f pubspec.lock
           flutter clean
           flutter pub get
 
       - name: Build APK
-        # Agregamos flags para evitar errores comunes de iconos y permisos
-        run: flutter build apk --release --no-tree-shake-icons --no-pub
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-APK-2026
+          name: Alchemy-APK
           path: build/app/outputs/flutter-apk/app-release.apk
