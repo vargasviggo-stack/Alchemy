@@ -22,14 +22,14 @@ jobs:
 
       - name: 4. Construccion del APK
         run: |
-          # Limpieza profunda
+          # Borramos rastros de intentos anteriores
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Ahora con la URL completa funcionará)
+          # Descargamos las librerías (Con el https:// ahora funcionará)
           flutter pub get
           
-          # Construimos el APK de Alchemy
+          # Generamos el instalador
           flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar APK
