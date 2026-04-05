@@ -38,8 +38,8 @@ dependencies:
   connectivity_plus: ^6.0.2
   country_currency_pickers: ^3.0.0
   crypto: ^3.0.3
-    custom_navigator:
-    git:
+  custom_navigator:
+   git:
       url: https://github.com
       ref: master
   device_info_plus: ^11.1.0
