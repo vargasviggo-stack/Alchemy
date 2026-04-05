@@ -17,14 +17,14 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.30.0, que es la versión estable compatible con Dart 3.8+
-          flutter-version: '3.30.0' 
+          # "any" con canal stable descargará la versión más moderna disponible
+          # que es lo que Alchemy necesita para el SDK de Dart.
+          flutter-version: 'any' 
           channel: 'stable'
           cache: true
 
       - name: Install dependencies
         run: |
-          # Limpieza total para que no queden rastros de versiones viejas
           rm -f pubspec.lock
           flutter clean
           flutter pub get
