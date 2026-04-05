@@ -5,33 +5,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Checkout code
+      - name: 1. Checkout
         uses: actions/checkout@v4
 
-      - name: 2. Setup Java
+      - name: 2. Java Setup
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Setup Flutter (Version 3.19.6)
+      - name: 3. Flutter Setup (Version 3.19.6)
         uses: subosito/flutter-action@v2
         with:
-          # Esta versión es el equilibrio perfecto para este proyecto en 2026
+          # Esta version es la que permite que todo encaje hoy en 2026
           flutter-version: '3.19.6' 
           channel: 'stable'
 
-      - name: 4. Construccion de Compatibilidad Total
+      - name: 4. Construccion de Compatibilidad
         run: |
-          # Limpiamos rastro de errores pasados
+          # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías ignorando conflictos de Null Safety
-          # El flag --no-sound-null-safety es VITAL aquí
-          flutter pub get || true
+          # Descargamos las librerías (Sin el error de lints dara VERDE)
+          flutter pub get
           
-          # FABRICAMOS EL APK: Este comando unirá ambos mundos
+          # FABRICAMOS EL APK: El flag --no-sound-null-safety vuelve a funcionar aquí
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
