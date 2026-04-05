@@ -14,30 +14,32 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version de Oro)
+      - name: 3. Configurar Flutter (Version Dart 3.5.0)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.19.6 porque es la que mejor perdona a las librerias viejas
-          flutter-version: '3.19.6' 
+          # Usamos la 3.24.0 para cumplir con el SDK >=3.5.0 de sqflite
+          flutter-version: '3.24.0' 
           channel: 'stable'
+          cache: true
 
       - name: 4. Construccion de Alchemy
         run: |
-          # Aceptamos licencias de Google
+          # Aceptamos licencias
           yes | sdkmanager --licenses || true
           
-          # Borramos el rastro de errores pasados
+          # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Ahora sin lints dara VERDE)
-          flutter pub get || true
+          # Descargamos las librerías (Ahora con Dart 3.5 dara VERDE)
+          flutter pub get
           
-          # FABRICAMOS EL APK: El flag --no-sound-null-safety arregla lo de custom_navigator
-          flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
+          # FABRICAMOS EL APK
+          # Quitamos el flag de null-safety porque en esta version ya no se necesita
+          flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final-APK
+          name: Alchemy-Instalador-APK
           path: build/app/outputs/flutter-apk/app-release.apk
