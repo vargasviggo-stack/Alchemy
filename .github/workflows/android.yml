@@ -14,31 +14,30 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version Dart 3.5.0)
+      - name: 3. Configurar Flutter (Version Dart 3.7.0)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.24.0 para cumplir con el SDK >=3.5.0 de sqflite
-          flutter-version: '3.24.0' 
+          # Usamos la 3.27.0 para cumplir con el SDK ^3.7.0 de tu error
+          flutter-version: '3.27.0' 
           channel: 'stable'
           cache: true
 
       - name: 4. Construccion de Alchemy
         run: |
-          # Aceptamos licencias
+          # Aceptamos licencias de Google
           yes | sdkmanager --licenses || true
           
           # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Ahora con Dart 3.5 dara VERDE)
+          # Descargamos las librerías (Ahora con Dart 3.7 dara VERDE)
           flutter pub get
           
           # FABRICAMOS EL APK
-          # Quitamos el flag de null-safety porque en esta version ya no se necesita
           flutter build apk --release --no-tree-shake-icons
 
-      - name: 5. Descargar mi APK
+      - name: 5. Guardar mi APK
         uses: actions/upload-artifact@v4
         with:
           name: Alchemy-Instalador-APK
