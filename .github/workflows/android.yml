@@ -20,17 +20,19 @@ jobs:
           flutter-version: 'any' 
           channel: 'stable'
 
-      - name: 4. Construccion Forzada del APK
+      - name: 4. Reparar y Construir APK
         run: |
           # Limpiamos rastro de errores pasados
           rm -f pubspec.lock
           flutter clean
           
-          # El "|| true" hace que si falla la descarga, el proceso SIGA ADELANTE
-          flutter pub get || true
+          # TRUCO: Forzamos el uso de una version de custom_navigator que SI tiene Null Safety
+          # Esto evita que tengas que editar el pubspec.yaml a mano y fallar con los espacios.
+          sed -i 's/custom_navigator: any/custom_navigator: {git: {url: "https:\/\/github.com\/m-hamzashakeel\/custom_navigator.git"}}/g' pubspec.yaml
           
-          # Fabricamos el APK ignorando advertencias de versiones
-          flutter build apk --release --no-tree-shake-icons --no-pub || flutter build apk --release --no-tree-shake-icons
+          # Descargamos todo y fabricamos el APK
+          flutter pub get
+          flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
