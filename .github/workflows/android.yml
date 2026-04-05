@@ -14,31 +14,28 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version mas nueva)
+      - name: 3. Configurar Flutter (Version Compatible)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos 'any' para que baje la version que tiene Dart 3.8+
-          flutter-version: 'any' 
+          # Usamos la 3.10.0 porque permite librerias sin Null Safety
+          flutter-version: '3.10.0' 
           channel: 'stable'
-          cache: true
 
-      - name: 4. Construccion Forzada del APK
+      - name: 4. Construccion Forzada
         run: |
-          # Aceptamos licencias de Android
-          yes | sdkmanager --licenses || true
-          
-          # Limpieza profunda
+          # Limpieza profunda para no usar memoria de errores pasados
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Ahora con la version mas nueva dara VERDE)
+          # Bajamos las librerias ignorando advertencias de Null Safety
+          # El flag --no-sound-null-safety aqui es VITAL
           flutter pub get
           
-          # Fabricamos el APK ignorando el error de Null Safety
+          # Fabricamos el APK permitiendo librerias antiguas
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Instalador-APK
+          name: Alchemy-Final-APK
           path: build/app/outputs/flutter-apk/app-release.apk
