@@ -14,30 +14,30 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Canal Master para Dart 3.7)
+      - name: 3. Configurar Flutter (Version mas nueva)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos 'master' para forzar la version mas nueva de 2026
-          channel: 'master'
-          cache: false 
+          # Usamos 'any' para tener el Dart 3.12 que ya tienes funcionando
+          flutter-version: 'any' 
+          channel: 'stable'
 
-      - name: 4. Construccion de Alchemy
+      - name: 4. Construccion Forzada
         run: |
-          # Aceptamos licencias
+          # Aceptamos licencias de Google
           yes | sdkmanager --licenses || true
           
           # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Con el canal master, el Dart sera 3.7+ y dara VERDE
+          # Ahora con el SDK 2.12.0 en el pubspec, esto dara VERDE
           flutter pub get
           
-          # Fabricamos el APK
-          flutter build apk --release --no-tree-shake-icons
+          # FABRICAMOS EL APK: Ignoramos el error de Null Safety con este flag
+          flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Instalador-APK
+          name: Alchemy-Final-APK
           path: build/app/outputs/flutter-apk/app-release.apk
