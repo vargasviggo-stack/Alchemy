@@ -5,37 +5,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Checkout
+      - name: 1. Checkout code
         uses: actions/checkout@v4
 
-      - name: 2. Java Setup
+      - name: 2. Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Flutter Setup (Version 2026)
+      - name: 3. Setup Flutter (Version 2026)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.22.0 porque permite el truco de compatibilidad
-          flutter-version: '3.22.0' 
+          # Esta version trae Dart 3.5.0 que pide tu error de la linea 51
+          flutter-version: '3.24.0' 
           channel: 'stable'
 
-      - name: 4. Build APK (Forzado)
+      - name: 4. Build APK Final
         run: |
-          # Limpiamos rastro de versiones viejas
+          # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # FORZAMOS la descarga ignorando que la libreria sea vieja
-          # El flag --no-sound-null-safety es el secreto aqui
-          flutter pub get || true
+          # Descargamos las librerías (Ahora con Dart 3.5 dara VERDE)
+          flutter pub get
           
-          # FABRICAMOS EL APK: Este comando unira Alchemy con las librerias viejas
-          flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
+          # Construimos el APK sin el comando "no-sound-null-safety" que daba error
+          flutter build apk --release --no-tree-shake-icons
 
-      - name: 5. Descargar APK
+      - name: 5. Guardar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Instalador-APK
+          name: Alchemy-Final-APK
           path: build/app/outputs/flutter-apk/app-release.apk
