@@ -14,27 +14,28 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version 2026)
+      - name: 3. Configurar Flutter (Version Dart 3.5+)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.22.0 para cumplir con el SDK >=3.0.0 de tu error
-          flutter-version: '3.22.0' 
+          # Usamos la 3.24.0 para cumplir con el SDK >=3.5.0 de tu error
+          flutter-version: '3.24.0' 
           channel: 'stable'
+          cache: true
 
-      - name: 4. Construccion Forzada
+      - name: 4. Construccion de Compatibilidad
         run: |
           # Limpieza total
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Ahora con Dart 3.0+ dara VERDE)
+          # Descargamos las librerías (Ahora con Dart 3.5+ dara VERDE)
           flutter pub get
           
-          # FABRICAMOS EL APK: Este comando unira Alchemy con las librerias viejas
+          # Fabricamos el APK permitiendo la mezcla con custom_navigator
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Guardar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final-APK
+          name: Alchemy-Instalador-APK
           path: build/app/outputs/flutter-apk/app-release.apk
