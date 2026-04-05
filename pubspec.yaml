@@ -64,10 +64,8 @@ dependencies:
   json_annotation: ^4.9.0
   just_audio: ^0.10.3
   logging: ^1.2.0
-  marquee:
-    path: ./marquee
-  move_to_background:
-    path: ./move_to_background
+  marquee: any
+  move_to_background: ^1.0.2
   numberpicker: ^2.1.2
   package_info_plus: ^8.0.0
   path: ^1.8.3
