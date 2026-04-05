@@ -14,23 +14,23 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Flutter Setup (Version 3.19.6)
+      - name: 3. Flutter Setup (Version 3.22.0)
         uses: subosito/flutter-action@v2
         with:
-          # Esta es la version magica que NO te dara el error de la linea 26
-          flutter-version: '3.19.6' 
+          # Esta version tiene el Dart que pide lints y el comando para custom_navigator
+          flutter-version: '3.22.0' 
           channel: 'stable'
+          cache: false # Forzamos la descarga limpia
 
       - name: 4. Construccion de Compatibilidad Total
         run: |
-          # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Con el SDK 2.12.0 dara VERDE)
-          flutter pub get || true
+          # Descargamos las librerías (Ahora con Dart moderno dara VERDE)
+          flutter pub get
           
-          # FABRICAMOS EL APK: En esta version el flag SI existe y funcionara
+          # FABRICAMOS EL APK: En la 3.22.0 este flag SI existe y funcionara
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
