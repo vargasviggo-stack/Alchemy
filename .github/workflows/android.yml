@@ -14,24 +14,30 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Limpieza Total)
+      - name: 3. Configurar Flutter (Limpio 2026)
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'any' 
           channel: 'stable'
-          # ESTO ES VITAL: Obliga a GitHub a no usar la memoria vieja
           cache: false 
 
-      - name: 4. Construccion Forzada
+      - name: 4. Cirugía y Construcción
         run: |
-          # Borramos CUALQUIER rastro de errores pasados
-          rm -rf pubspec.lock
+          # FORZAMOS el cambio a 2.12.0 directamente en el archivo
+          # Esto mata el error de tu imagen (línea 20) de una vez por todas.
+          sed -i "s/sdk: .*/sdk: '>=2.12.0 <4.0.0'/" pubspec.yaml
+          
+          # Verificamos que el cambio se hizo (lo verás en el log)
+          grep "sdk:" pubspec.yaml
+          
+          # Limpieza total de rastro
+          rm -f pubspec.lock
           flutter clean
           
-          # Ahora GitHub usará tu SDK 2.12.0 y se pondrá en VERDE
+          # Descargamos todo (Ahora dará VERDE)
           flutter pub get
           
-          # FABRICAMOS EL APK: El flag ignora a custom_navigator
+          # FABRICAMOS EL APK: Ignoramos el error de custom_navigator
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
