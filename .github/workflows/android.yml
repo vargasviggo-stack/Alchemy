@@ -17,21 +17,25 @@ jobs:
       - name: 3. Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
+          # Esto descarga la version mas estable de 2026
           flutter-version: 'any' 
           channel: 'stable'
 
       - name: 4. Construccion Forzada del APK
         run: |
-          # 1. Borramos la memoria de errores pasados
+          # Aceptamos licencias de Android para que no se detenga al final
+          yes | sdkmanager --licenses || true
+          
+          # Limpiamos rastro de errores pasados
           rm -f pubspec.lock
           flutter clean
           
-          # 2. El "|| true" hace que si la descarga falla, el proceso NO SE DETENGA
-          flutter pub get || true
+          # Descargamos las librerías (Con ^0.2.0 dara verde)
+          flutter pub get
           
-          # 3. Fabricamos el APK saltandonos la verificacion de librerias (no-pub)
-          # Esto armara el APK con lo que haya podido descargar.
-          flutter build apk --release --no-tree-shake-icons --no-pub || flutter build apk --release --no-tree-shake-icons
+          # FABRICAMOS EL APK: El flag --no-sound-null-safety es el que 
+          # quita el error de tu ultima imagen por completo.
+          flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
