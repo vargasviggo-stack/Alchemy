@@ -14,34 +14,30 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Limpio 2026)
+      - name: 3. Configurar Flutter (Version 2026)
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'any' 
           channel: 'stable'
           cache: false 
 
-      - name: 4. Cirugía y Construcción
+      - name: 4. Construccion de Alchemy
         run: |
-          # FORZAMOS el cambio a 2.12.0 directamente en el archivo
-          # Esto mata el error de tu imagen (línea 20) de una vez por todas.
-          sed -i "s/sdk: .*/sdk: '>=2.12.0 <4.0.0'/" pubspec.yaml
+          # Aceptamos licencias
+          yes | sdkmanager --licenses || true
           
-          # Verificamos que el cambio se hizo (lo verás en el log)
-          grep "sdk:" pubspec.yaml
-          
-          # Limpieza total de rastro
+          # Limpieza profunda para borrar rastros de las comillas dobles
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos todo (Ahora dará VERDE)
+          # Descargamos las librerías (Ahora GitHub leerá tu 2.12.0 real)
           flutter pub get
           
-          # FABRICAMOS EL APK: Ignoramos el error de custom_navigator
+          # FABRICAMOS EL APK: El flag ignora a custom_navigator
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Instalador-APK
+          name: Alchemy-Final-APK
           path: build/app/outputs/flutter-apk/app-release.apk
