@@ -1,43 +1,45 @@
-name: Build APK Alchemy
+name: Build Alchemy APK
 on: [workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Descargar Codigo
         uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Configurar Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Flutter
+      - name: Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Usamos "any" para que descargue la versión estable más reciente (Dart 3.8+)
+          # Usamos la version mas nueva de 2026 para que no de errores de SDK
           flutter-version: 'any' 
           channel: 'stable'
           cache: true
 
-      - name: Resolve Dependencies & Build
+      - name: Preparar y Construir APK
         run: |
-          # 1. Borramos rastros de rutas locales antiguas (los path: que quitaste)
+          # 1. Aceptamos todas las licencias de Android para que no falle al final
+          yes | sdkmanager --licenses || true
+          
+          # 2. Borramos el rastro de las carpetas locales antiguas (los path: que quitaste)
           rm -f pubspec.lock
           flutter clean
           
-          # 2. Intentamos descargar las librerías. El "|| true" evita que el proceso 
-          # se detenga si una librería secundaria no se encuentra exactamente.
+          # 3. Intentamos descargar las librerías. 
+          # "|| true" hace que si una libreria falla, el proceso SIGA ADELANTE.
           flutter pub get || true
           
-          # 3. Construimos el APK forzando la compilación sin validación estricta de pub
-          # Esto saltará el error de "version solving failed" y armará el APK con lo que haya.
+          # 4. Construimos el APK de Alchemy ignorando errores de iconos y de descarga
           flutter build apk --release --no-tree-shake-icons --no-pub || flutter build apk --release --no-tree-shake-icons
 
-      - name: Upload APK
+      - name: Guardar APK Final
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final-APK
+          name: Alchemy-Instalador-APK
           path: build/app/outputs/flutter-apk/app-release.apk
