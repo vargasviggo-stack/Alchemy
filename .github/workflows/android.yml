@@ -14,21 +14,23 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version Dart 3.7.0)
+      - name: 3. Configurar Flutter (Canal Master para Dart 3.7)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.30.0 para subir de 3.6 a 3.7 de una vez
-          flutter-version: '3.30.0' 
-          channel: 'stable'
-          cache: false # Forzamos descarga limpia para que GitHub se actualice
+          # Usamos 'master' para forzar la version mas nueva de 2026
+          channel: 'master'
+          cache: false 
 
       - name: 4. Construccion de Alchemy
         run: |
+          # Aceptamos licencias
+          yes | sdkmanager --licenses || true
+          
           # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Ahora con Dart 3.7 esto dara VERDE
+          # Con el canal master, el Dart sera 3.7+ y dara VERDE
           flutter pub get
           
           # Fabricamos el APK
