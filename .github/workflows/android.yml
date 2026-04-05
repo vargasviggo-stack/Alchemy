@@ -7,9 +7,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          # ESTA ES LA CLAVE: descarga las carpetas de submódulos como figma_squircle
-          submodules: recursive 
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -20,17 +17,18 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'any'
+          flutter-version: 'any' 
           channel: 'stable'
           cache: true
 
-      - name: Install dependencies
+      - name: Build APK (PASO 3 AQUÍ)
         run: |
+          # ESTE ES EL PASO 3: Borra el rastro de las carpetas locales viejas
+          rm -f pubspec.lock
           flutter clean
           flutter pub get
-
-      - name: Build APK
-        run: flutter build apk --release --no-tree-shake-icons
+          # Genera el APK ignorando errores de iconos
+          flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
