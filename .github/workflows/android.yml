@@ -17,23 +17,20 @@ jobs:
       - name: 3. Configurar Flutter (Version mas nueva)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos 'any' para tener el Dart 3.12 que ya tienes funcionando
+          # Usamos 'any' para tener el Dart 3.11 que ya te funcionaba
           flutter-version: 'any' 
           channel: 'stable'
 
       - name: 4. Construccion Forzada
         run: |
-          # Aceptamos licencias de Google
-          yes | sdkmanager --licenses || true
-          
           # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Ahora con el SDK 2.12.0 en el pubspec, esto dara VERDE
+          # Con el SDK 2.12.0 en el pubspec, esto dara VERDE
           flutter pub get
           
-          # FABRICAMOS EL APK: Ignoramos el error de Null Safety con este flag
+          # FABRICAMOS EL APK: Este flag "perdona" a custom_navigator
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
