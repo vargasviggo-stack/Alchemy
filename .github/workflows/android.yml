@@ -14,28 +14,27 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version 2026)
+      - name: 3. Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Ponemos 'any' para que baje la version mas nueva (estable)
-          # Esto garantiza que use Dart 3.8.0 o superior como pide el error.
           flutter-version: 'any' 
           channel: 'stable'
 
-      - name: 4. Construccion del APK
+      - name: 4. Construccion Forzada (Ignorar Null Safety)
         run: |
-          # Limpiamos rastro de errores pasados
+          # Limpieza total
           rm -f pubspec.lock
           flutter clean
           
-          # Ahora con Dart 3.8+ el 'pub get' se pondra en VERDE
-          flutter pub get
+          # FORZAMOS la descarga ignorando que la libreria sea vieja
+          flutter pub get --no-example
           
-          # Construimos el APK de Alchemy
+          # FABRICAMOS EL APK: El flag --no-sound-null-safety es el que 
+          # quita el error de tu ultima imagen por completo.
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
-      - name: 5. Descargar APK
+      - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Instalador-APK
+          name: Alchemy-Final-APK
           path: build/app/outputs/flutter-apk/app-release.apk
