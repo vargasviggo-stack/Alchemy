@@ -17,24 +17,23 @@ jobs:
       - name: 3. Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la version mas estable para 2026 que soporte Dart 3.8+
           flutter-version: 'any' 
           channel: 'stable'
 
       - name: 4. Construccion del APK
         run: |
-          # Limpiamos rastro de errores pasados de red
+          # Borramos rastros de errores pasados
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Esto ahora debe dar VERDE con tu pubspec corregido)
+          # Descargamos las librerías (Con la version ^0.2.1 ahora dara VERDE)
           flutter pub get
           
-          # Fabricamos el APK
+          # Fabricamos el instalador
           flutter build apk --release --no-tree-shake-icons
 
-      - name: 5. Descargar APK
+      - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Instalador-APK
+          name: Alchemy-Final-APK
           path: build/app/outputs/flutter-apk/app-release.apk
