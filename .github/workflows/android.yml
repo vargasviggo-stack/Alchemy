@@ -5,19 +5,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Descargar Codigo
+      - name: 1. Checkout code
         uses: actions/checkout@v4
 
-      - name: 2. Configurar Java
+      - name: 2. Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version 3.19.6)
+      - name: 3. Setup Flutter (Version 3.19.6)
         uses: subosito/flutter-action@v2
         with:
-          # Esta version es el equilibrio perfecto para este proyecto en 2026
+          # Esta versión es el equilibrio perfecto para este proyecto en 2026
           flutter-version: '3.19.6' 
           channel: 'stable'
 
@@ -27,11 +27,11 @@ jobs:
           rm -f pubspec.lock
           flutter clean
           
-          # FORZAMOS la descarga ignorando el error de Null Safety
-          # El flag --no-sound-null-safety es vital aqui
+          # Descargamos las librerías ignorando conflictos de Null Safety
+          # El flag --no-sound-null-safety es VITAL aquí
           flutter pub get || true
           
-          # FABRICAMOS EL APK: Este comando unira ambos mundos
+          # FABRICAMOS EL APK: Este comando unirá ambos mundos
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
