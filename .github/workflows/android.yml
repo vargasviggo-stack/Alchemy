@@ -17,17 +17,19 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          # Usamos 'any' para que baje la versión con Dart 3.8+ que pide Alchemy
           flutter-version: 'any' 
           channel: 'stable'
           cache: true
 
-      - name: Build APK (PASO 3 AQUÍ)
+      - name: Build APK Final
         run: |
-          # ESTE ES EL PASO 3: Borra el rastro de las carpetas locales viejas
+          # Borramos el rastro de las carpetas locales (los path: que quitaste)
           rm -f pubspec.lock
           flutter clean
+          # Descargamos todo de internet
           flutter pub get
-          # Genera el APK ignorando errores de iconos
+          # Construimos el APK de Alchemy
           flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK
