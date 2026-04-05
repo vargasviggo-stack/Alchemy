@@ -5,39 +5,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 1. Checkout
         uses: actions/checkout@v4
 
-      - name: Java Setup
+      - name: 2. Java Setup
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Flutter Setup (Version de Oro)
+      - name: 3. Flutter Setup (Version 3.19.6)
         uses: subosito/flutter-action@v2
         with:
-          # Esta es la única versión que acepta el comando para ignorar errores
+          # Esta version es la que permite que todo encaje hoy en 2026
           flutter-version: '3.19.6' 
           channel: 'stable'
 
-      - name: Build APK (Fuerza Bruta)
+      - name: 4. Construccion de Compatibilidad
         run: |
-          # Aceptamos licencias de Google
-          yes | sdkmanager --licenses || true
-          
-          # Limpiamos rastro de intentos anteriores
+          # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # FORZAMOS la descarga ignorando errores de lints o versiones
-          flutter pub get || true
+          # Descargamos las librerías (Sin el error de lints dara VERDE)
+          flutter pub get
           
-          # CONSTRUIMOS: El flag --no-sound-null-safety arregla tu error de la foto
+          # FABRICAMOS EL APK: El flag --no-sound-null-safety vuelve a funcionar aquí
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
-      - name: Upload APK
+      - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final
+          name: Alchemy-Final-APK
           path: build/app/outputs/flutter-apk/app-release.apk
