@@ -14,32 +14,32 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version mas nueva)
+      - name: 3. Configurar Flutter (Version estable 2026)
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'any' 
           channel: 'stable'
 
-      - name: 4. Cirugia y Construccion Forzada
+      - name: 4. Cirugia y Construccion
         run: |
-          # A) ELIMINAMOS la libreria problematica del pubspec.yaml para que no de error
+          # A) ELIMINAMOS la libreria que daba guerra (custom_navigator)
           sed -i '/custom_navigator:/d' pubspec.yaml
           
-          # B) Arreglamos el error de la linea 25 de tu foto (Null Safety)
-          sed -i 's/sdk: .*/sdk: ">=2.12.0 <4.0.0"/' pubspec.yaml
+          # B) Arreglamos el SDK (Sin comillas para que Flutter lo entienda)
+          sed -i "s/sdk: .*/sdk: '>=2.12.0 <4.0.0'/" pubspec.yaml
           
-          # C) Limpieza total
+          # C) Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # D) Descargamos lo demas (Ahora dara VERDE porque ya no esta custom_navigator)
-          flutter pub get || true
+          # D) Descargamos librerias (Ahora dara VERDE)
+          flutter pub get
           
-          # E) Fabricamos el APK ignorando cualquier conflicto restante
-          flutter build apk --release --no-tree-shake-icons --no-sound-null-safety || flutter build apk --release --no-tree-shake-icons
+          # E) Fabricamos el APK
+          flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final-APK
+          name: Alchemy-Instalador-APK
           path: build/app/outputs/flutter-apk/app-release.apk
