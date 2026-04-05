@@ -8,40 +8,31 @@ jobs:
       - name: 1. Descargar Codigo
         uses: actions/checkout@v4
 
-      - name: 2. Configurar Java (Version 17)
+      - name: 2. Configurar Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version 2026)
+      - name: 3. Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Buscamos la mas nueva para que coincida con tu Dart 3.8+
           flutter-version: 'any' 
           channel: 'stable'
-          cache: true
 
-      - name: 4. Limpieza y Construccion de APK
+      - name: 4. Construccion del APK
         run: |
-          # Aceptamos licencias de Google Android (Evita el Error 255)
-          yes | sdkmanager --licenses || true
-          
-          # Borramos rastro de carpetas locales antiguas
+          # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías de internet (las que ya no tienen "path")
+          # Descargamos las librerías (Ahora con la URL completa funcionará)
           flutter pub get
           
-          # LIMPIEZA CLAVE DE GRADLE (Para quitar el Error 255)
-          cd android && ./gradlew clean && cd ..
-          
-          # CONSTRUCCION FINAL DEL APK
-          # Usamos --no-tree-shake-icons por si alguna libreria de iconos falla
+          # Construimos el APK de Alchemy
           flutter build apk --release --no-tree-shake-icons
 
-      - name: 5. Guardar y Descargar APK
+      - name: 5. Descargar APK
         uses: actions/upload-artifact@v4
         with:
           name: Alchemy-Instalador-APK
