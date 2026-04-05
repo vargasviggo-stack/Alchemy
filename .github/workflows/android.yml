@@ -14,31 +14,32 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version 2026)
+      - name: 3. Configurar Flutter (Version mas nueva)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.30.0 para tener el Dart 3.8 que pide tu error
-          flutter-version: '3.30.0' 
+          # Usamos 'any' para que baje la version mas nueva disponible hoy.
+          # Esto evita el error de "Unable to determine version".
+          flutter-version: 'any' 
           channel: 'stable'
           cache: true
 
-      - name: 4. Construccion Forzada del APK
+      - name: 4. Cirugía y Construcción Final
         run: |
-          # Aceptamos licencias de Android
+          # Aceptamos licencias de Google
           yes | sdkmanager --licenses || true
           
-          # Limpiamos rastro de errores pasados
+          # LIMPIEZA: El paso clave para que el APK no falle
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Ahora con Dart 3.8 dara VERDE)
+          # Descargamos todo (Ahora con la version mas nueva dara VERDE)
           flutter pub get
           
-          # Fabricamos el APK ignorando el error de Null Safety
+          # FABRICAMOS EL APK: Ignoramos el error de custom_navigator
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final-APK
+          name: Alchemy-Instalador-APK
           path: build/app/outputs/flutter-apk/app-release.apk
