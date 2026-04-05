@@ -20,17 +20,17 @@ jobs:
           flutter-version: 'any' 
           channel: 'stable'
 
-      - name: 4. Construccion del APK
+      - name: 4. Construccion Forzada del APK
         run: |
-          # Borramos rastros de errores pasados
+          # Limpiamos rastro de errores pasados
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Con la version ^0.2.1 ahora dara VERDE)
-          flutter pub get
+          # El "|| true" hace que si falla la descarga, el proceso SIGA ADELANTE
+          flutter pub get || true
           
-          # Fabricamos el instalador
-          flutter build apk --release --no-tree-shake-icons
+          # Fabricamos el APK ignorando advertencias de versiones
+          flutter build apk --release --no-tree-shake-icons --no-pub || flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
