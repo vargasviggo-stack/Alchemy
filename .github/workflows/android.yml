@@ -14,27 +14,23 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter
+      - name: 3. Configurar Flutter (Version Compatible)
         uses: subosito/flutter-action@v2
         with:
-          # Esto descarga la version mas estable de 2026
-          flutter-version: 'any' 
+          # Usamos la 3.10.0 porque permite librerias sin Null Safety
+          flutter-version: '3.10.0' 
           channel: 'stable'
 
-      - name: 4. Construccion Forzada del APK
+      - name: 4. Construccion Forzada
         run: |
-          # Aceptamos licencias de Android para que no se detenga al final
-          yes | sdkmanager --licenses || true
-          
-          # Limpiamos rastro de errores pasados
+          # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Con ^0.2.0 dara verde)
+          # Bajamos las librerias ignorando advertencias
           flutter pub get
           
-          # FABRICAMOS EL APK: El flag --no-sound-null-safety es el que 
-          # quita el error de tu ultima imagen por completo.
+          # Fabricamos el APK permitiendo librerias antiguas
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
