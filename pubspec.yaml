@@ -19,7 +19,7 @@ version: 1.0.0
 
 environment:
   # Bajamos a 3.4.0 para que tu Dart 3.5.0-beta lo acepte sin problemas
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '>=3.7.0 <4.0.0'
 
 dependencies:
   flutter:
