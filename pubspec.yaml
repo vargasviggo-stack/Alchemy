@@ -19,7 +19,7 @@ version: 1.0.0
 
 environment:
   # Bajamos el mínimo a 3.6.0 para que coincida con lo que GitHub ya tiene
-  sdk: '>=3.6.0 <4.0.0'
+  sdk: '>=3.7.0 <4.0.0'
 
 dependencies:
   flutter:
