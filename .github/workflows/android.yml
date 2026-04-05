@@ -20,18 +20,16 @@ jobs:
           flutter-version: 'any' 
           channel: 'stable'
 
-      - name: 4. Reparar y Construir APK
+      - name: 4. Construccion Limpia del APK
         run: |
-          # Limpiamos rastro de errores pasados
+          # Borramos CUALQUIER rastro de configuraciones fallidas
           rm -f pubspec.lock
           flutter clean
           
-          # TRUCO: Forzamos el uso de una version de custom_navigator que SI tiene Null Safety
-          # Esto evita que tengas que editar el pubspec.yaml a mano y fallar con los espacios.
-          sed -i 's/custom_navigator: any/custom_navigator: {git: {url: "https:\/\/github.com\/m-hamzashakeel\/custom_navigator.git"}}/g' pubspec.yaml
-          
-          # Descargamos todo y fabricamos el APK
+          # Descargamos las librerías desde cero (Usa la version ^0.5.0 de internet)
           flutter pub get
+          
+          # Fabricamos el instalador final
           flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar mi APK
