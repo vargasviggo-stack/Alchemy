@@ -14,26 +14,27 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version Compatible)
+      - name: 3. Configurar Flutter (Version 2026)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.10.0 porque es la ultima que "deja pasar" librerias viejas
-          flutter-version: '3.10.0' 
+          # Usamos 'any' para tener Dart 3.8+ que pide el error de tu foto
+          flutter-version: 'any' 
           channel: 'stable'
 
-      - name: 4. Construccion Forzada (Sin Null Safety)
+      - name: 4. Construccion de Compatibilidad
         run: |
           rm -f pubspec.lock
           flutter clean
           
-          # FORZAMOS la descarga ignorando el error de Null Safety de la imagen
+          # FORZAMOS la descarga ignorando conflictos de Null Safety
+          # El flag --no-sound-null-safety es el que une ambos mundos
           flutter pub get
           
-          # FABRICAMOS EL APK: El flag --no-sound-null-safety es el secreto
+          # Fabricamos el APK permitiendo la mezcla de versiones
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final-APK
+          name: Alchemy-Instalador-APK
           path: build/app/outputs/flutter-apk/app-release.apk
