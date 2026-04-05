@@ -38,7 +38,7 @@ dependencies:
   connectivity_plus: ^6.0.2
   country_currency_pickers: ^3.0.0
   crypto: ^3.0.3
-  custom_navigator: ^0.2.1
+  custom_navigator: any
   device_info_plus: ^11.1.0
   draggable_scrollbar: ^0.1.0
   encrypt: ^5.0.3
