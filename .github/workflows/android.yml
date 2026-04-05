@@ -5,40 +5,43 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Descargar Codigo
+      - name: 1. Descargar Codigo
         uses: actions/checkout@v4
 
-      - name: Configurar Java
+      - name: 2. Configurar Java (Version 17)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Configurar Flutter
+      - name: 3. Configurar Flutter (Version 2026)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la version mas nueva de 2026 para que no de errores de SDK
+          # Buscamos la mas nueva para que coincida con tu Dart 3.8+
           flutter-version: 'any' 
           channel: 'stable'
           cache: true
 
-      - name: Preparar y Construir APK
+      - name: 4. Limpieza y Construccion de APK
         run: |
-          # 1. Aceptamos todas las licencias de Android para que no falle al final
+          # Aceptamos licencias de Google Android (Evita el Error 255)
           yes | sdkmanager --licenses || true
           
-          # 2. Borramos el rastro de las carpetas locales antiguas (los path: que quitaste)
+          # Borramos rastro de carpetas locales antiguas
           rm -f pubspec.lock
           flutter clean
           
-          # 3. Intentamos descargar las librerías. 
-          # "|| true" hace que si una libreria falla, el proceso SIGA ADELANTE.
-          flutter pub get || true
+          # Descargamos las librerías de internet (las que ya no tienen "path")
+          flutter pub get
           
-          # 4. Construimos el APK de Alchemy ignorando errores de iconos y de descarga
-          flutter build apk --release --no-tree-shake-icons --no-pub || flutter build apk --release --no-tree-shake-icons
+          # LIMPIEZA CLAVE DE GRADLE (Para quitar el Error 255)
+          cd android && ./gradlew clean && cd ..
+          
+          # CONSTRUCCION FINAL DEL APK
+          # Usamos --no-tree-shake-icons por si alguna libreria de iconos falla
+          flutter build apk --release --no-tree-shake-icons
 
-      - name: Guardar APK Final
+      - name: 5. Guardar y Descargar APK
         uses: actions/upload-artifact@v4
         with:
           name: Alchemy-Instalador-APK
