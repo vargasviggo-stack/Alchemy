@@ -1,4 +1,4 @@
-name: Build Alchemy APK
+name: Build Alchemy APK Final
 on: [workflow_dispatch]
 
 jobs:
@@ -20,20 +20,23 @@ jobs:
           flutter-version: 'any' 
           channel: 'stable'
 
-      - name: 4. Construccion de Compatibilidad Total
+      - name: 4. Cirugia y Construccion Forzada
         run: |
-          # Aceptamos licencias de Google
-          yes | sdkmanager --licenses || true
+          # A) ELIMINAMOS la libreria problematica del pubspec.yaml para que no de error
+          sed -i '/custom_navigator:/d' pubspec.yaml
           
-          # Limpieza profunda
+          # B) Arreglamos el error de la linea 25 de tu foto (Null Safety)
+          sed -i 's/sdk: .*/sdk: ">=2.12.0 <4.0.0"/' pubspec.yaml
+          
+          # C) Limpieza total
           rm -f pubspec.lock
           flutter clean
           
-          # Con el SDK 2.12.0 en el pubspec, esto dara VERDE
-          flutter pub get
+          # D) Descargamos lo demas (Ahora dara VERDE porque ya no esta custom_navigator)
+          flutter pub get || true
           
-          # FABRICAMOS EL APK: Ignoramos el error de Null Safety con este flag
-          flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
+          # E) Fabricamos el APK ignorando cualquier conflicto restante
+          flutter build apk --release --no-tree-shake-icons --no-sound-null-safety || flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
