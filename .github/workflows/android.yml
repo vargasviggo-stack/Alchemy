@@ -14,28 +14,25 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version estable 2026)
+      - name: 3. Configurar Flutter (Version 2026)
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'any' 
           channel: 'stable'
 
-      - name: 4. Cirugia y Construccion
+      - name: 4. Construccion de Alchemy
         run: |
-          # A) ELIMINAMOS la libreria que daba guerra (custom_navigator)
-          sed -i '/custom_navigator:/d' pubspec.yaml
+          # Aceptamos licencias
+          yes | sdkmanager --licenses || true
           
-          # B) Arreglamos el SDK (Sin comillas para que Flutter lo entienda)
-          sed -i "s/sdk: .*/sdk: '>=2.12.0 <4.0.0'/" pubspec.yaml
-          
-          # C) Limpieza profunda
+          # Borramos el rastro de errores pasados
           rm -f pubspec.lock
           flutter clean
           
-          # D) Descargamos librerias (Ahora dara VERDE)
+          # Descargamos las librerías (Ahora GitHub usará tu pubspec real)
           flutter pub get
           
-          # E) Fabricamos el APK
+          # Construimos el APK de Alchemy
           flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar mi APK
