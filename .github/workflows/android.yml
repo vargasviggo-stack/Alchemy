@@ -7,6 +7,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # ESTO ES LO QUE FALTA: descarga las carpetas como figma_squircle
+          submodules: recursive 
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -17,15 +20,13 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          # "any" con canal stable descargará la versión más moderna disponible
-          # que es lo que Alchemy necesita para el SDK de Dart.
-          flutter-version: 'any' 
+          flutter-version: 'any'
           channel: 'stable'
           cache: true
 
       - name: Install dependencies
         run: |
-          rm -f pubspec.lock
+          # No borres el lock ahora que tenemos los submódulos
           flutter clean
           flutter pub get
 
