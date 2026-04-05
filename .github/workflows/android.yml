@@ -17,19 +17,20 @@ jobs:
       - name: 3. Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
+          # Usamos la version mas estable para 2026 que soporte Dart 3.8+
           flutter-version: 'any' 
           channel: 'stable'
 
       - name: 4. Construccion del APK
         run: |
-          # Borramos rastros de intentos anteriores
+          # Limpiamos rastro de errores pasados de red
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Con el https:// ahora funcionará)
+          # Descargamos las librerías (Esto ahora debe dar VERDE con tu pubspec corregido)
           flutter pub get
           
-          # Generamos el instalador
+          # Fabricamos el APK
           flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar APK
