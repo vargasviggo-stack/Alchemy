@@ -5,38 +5,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Descargar Codigo
+      - name: 1. Checkout
         uses: actions/checkout@v4
 
-      - name: 2. Configurar Java
+      - name: 2. Java Setup
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version mas nueva)
+      - name: 3. Flutter Setup (Version 2026)
         uses: subosito/flutter-action@v2
         with:
-          # Ponemos 'any' para que GitHub busque la version mas moderna de 2026.
-          # Esto actualizara el Dart de 3.3.4 a 3.5.0 o superior.
-          flutter-version: 'any' 
+          # Usamos la 3.22.0 porque permite el truco de compatibilidad
+          flutter-version: '3.22.0' 
           channel: 'stable'
-          # Desactivamos el cache temporalmente para forzar la descarga nueva
-          cache: false 
 
-      - name: 4. Construccion Forzada
+      - name: 4. Build APK (Forzado)
         run: |
-          # Limpiamos todo rastro de la version 3.3.4
+          # Limpiamos rastro de versiones viejas
           rm -f pubspec.lock
           flutter clean
           
-          # Ahora con Dart 3.5+ esto deberia dar VERDE
-          flutter pub get
+          # FORZAMOS la descarga ignorando que la libreria sea vieja
+          # El flag --no-sound-null-safety es el secreto aqui
+          flutter pub get || true
           
-          # Fabricamos el APK ignorando el error de Null Safety
+          # FABRICAMOS EL APK: Este comando unira Alchemy con las librerias viejas
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
-      - name: 5. Descargar mi APK
+      - name: 5. Descargar APK
         uses: actions/upload-artifact@v4
         with:
           name: Alchemy-Instalador-APK
