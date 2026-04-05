@@ -14,24 +14,23 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version Dart 3.7.0)
+      - name: 3. Configurar Flutter (Canal Beta para Dart 3.7)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.27.0 para cumplir con el SDK ^3.7.0 de tu error
-          flutter-version: '3.27.0' 
-          channel: 'stable'
-          cache: false # Forzamos descarga limpia para actualizar Dart
+          # El canal beta ya tiene el Dart 3.7.0 que la version estable aun no suelta
+          channel: 'beta'
+          cache: false # OBLIGATORIO: Para que no use la 3.6.0 vieja
 
       - name: 4. Construccion de Alchemy
         run: |
-          # Limpieza profunda
+          # Limpieza profunda de memoria
           rm -f pubspec.lock
           flutter clean
           
-          # Ahora con Dart 3.7 dara VERDE
+          # Con el canal Beta, el Dart sera 3.7.x y dara VERDE por fin
           flutter pub get
           
-          # FABRICAMOS EL APK
+          # Fabricamos el APK
           flutter build apk --release --no-tree-shake-icons
 
       - name: 5. Descargar mi APK
