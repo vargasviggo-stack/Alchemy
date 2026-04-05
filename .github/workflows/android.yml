@@ -17,20 +17,19 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          # He subido la versión a la 3.19.0 porque Alchemy se actualizó recientemente
-          flutter-version: '3.19.0' 
+          # Usamos la versión estable más reciente (superior a 3.19)
+          # para asegurar que incluya Dart SDK >= 3.8.0
+          flutter-version: '3.22.0' 
           channel: 'stable'
           cache: true
 
-      - name: Limpiar y Obtener Dependencias
+      - name: Install dependencies
         run: |
-          # Forzamos la regeneración del archivo de bloqueo para evitar conflictos
           rm -f pubspec.lock
           flutter clean
           flutter pub get
 
       - name: Build APK
-        # Añadimos --split-per-abi por si la arquitectura de destino es específica
         run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK
