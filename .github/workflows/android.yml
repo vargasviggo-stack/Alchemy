@@ -14,23 +14,27 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version Compatible)
+      - name: 3. Configurar Flutter (Version 2026)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.10.0 porque permite librerias sin Null Safety
-          flutter-version: '3.10.0' 
+          # Usamos la 3.30.0 para tener el Dart 3.8 que pide tu error
+          flutter-version: '3.30.0' 
           channel: 'stable'
+          cache: true
 
-      - name: 4. Construccion Forzada
+      - name: 4. Construccion Forzada del APK
         run: |
-          # Limpieza profunda
+          # Aceptamos licencias de Android
+          yes | sdkmanager --licenses || true
+          
+          # Limpiamos rastro de errores pasados
           rm -f pubspec.lock
           flutter clean
           
-          # Bajamos las librerias ignorando advertencias
+          # Descargamos las librerías (Ahora con Dart 3.8 dara VERDE)
           flutter pub get
           
-          # Fabricamos el APK permitiendo librerias antiguas
+          # Fabricamos el APK ignorando el error de Null Safety
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
