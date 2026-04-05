@@ -18,8 +18,8 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0
 
 environment:
-  # Bajamos el mínimo a 3.6.0 para que coincida con lo que GitHub ya tiene
-  sdk: '>=3.7.0 <4.0.0'
+  # Cambiamos el 2.1.0 por 2.12.0 para activar el Null Safety que pide el error
+  sdk: '>=2.12.0 <4.0.0'
 
 dependencies:
   flutter:
