@@ -8,7 +8,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # ESTO SOLUCIONA EL ERROR: Descarga las carpetas de submódulos como figma_squircle
+          # ESTA ES LA CLAVE: descarga las carpetas de submódulos como figma_squircle
           submodules: recursive 
 
       - name: Setup Java
@@ -20,7 +20,6 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Usamos 'any' para que elija la versión estable más reciente
           flutter-version: 'any'
           channel: 'stable'
           cache: true
