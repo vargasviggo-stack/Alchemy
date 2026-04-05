@@ -14,29 +14,30 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version de Oro)
+      - name: 3. Configurar Flutter (Version mas nueva)
         uses: subosito/flutter-action@v2
         with:
-          # Esta version es el equilibrio perfecto para este proyecto
-          flutter-version: '3.19.6' 
+          # Ponemos 'any' para que GitHub busque la version mas moderna de 2026.
+          # Esto actualizara el Dart de 3.3.4 a 3.5.0 o superior.
+          flutter-version: 'any' 
           channel: 'stable'
+          # Desactivamos el cache temporalmente para forzar la descarga nueva
+          cache: false 
 
-      - name: 4. Construccion de Compatibilidad Total
+      - name: 4. Construccion Forzada
         run: |
-          # Limpiamos rastro de errores pasados
+          # Limpiamos todo rastro de la version 3.3.4
           rm -f pubspec.lock
           flutter clean
           
-          # FORZAMOS la descarga ignorando el error de Null Safety de tu foto
-          # Usamos un comando especial para que no se detenga en las dependencias
-          flutter pub get --no-example
+          # Ahora con Dart 3.5+ esto deberia dar VERDE
+          flutter pub get
           
-          # FABRICAMOS EL APK: Este comando unira Alchemy con las librerias viejas
-          # El flag --no-sound-null-safety es el que hace la magia aqui
+          # Fabricamos el APK ignorando el error de Null Safety
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
-      - name: 5. Guardar mi APK
+      - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final-APK
+          name: Alchemy-Instalador-APK
           path: build/app/outputs/flutter-apk/app-release.apk
