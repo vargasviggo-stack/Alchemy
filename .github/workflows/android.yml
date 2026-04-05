@@ -14,33 +14,27 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version de Oro 3.19.6)
+      - name: 3. Configurar Flutter (Version 2026)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos esta porque es la única que permite el truco de compatibilidad
-          flutter-version: '3.19.6' 
+          # Usamos la 3.30.0 para tener el Dart 3.8 que pide tu error
+          flutter-version: '3.30.0' 
           channel: 'stable'
+          cache: true
 
-      - name: 4. Cirugía y Construcción Final
+      - name: 4. Construccion Forzada del APK
         run: |
-          # Aceptamos licencias
+          # Aceptamos licencias de Android
           yes | sdkmanager --licenses || true
           
-          # ELIMINAMOS el problema: Borramos cualquier rastro de lints del archivo
-          # Esto hará que el error de tu imagen desaparezca POR FIN.
-          sed -i '/flutter_lints:/d' pubspec.yaml
-          
-          # Ajustamos el SDK para que no se queje de la versión
-          sed -i 's/sdk: .*/sdk: ">=3.0.0 <4.0.0"/' pubspec.yaml
-          
-          # Limpieza total
+          # Limpiamos rastro de errores pasados
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos todo (Ahora dará VERDE porque ya no existe flutter_lints)
-          flutter pub get || true
+          # Descargamos las librerías (Ahora con Dart 3.8 dara VERDE)
+          flutter pub get
           
-          # FABRICAMOS EL APK: El flag --no-sound-null-safety arregla lo de custom_navigator
+          # Fabricamos el APK ignorando el error de Null Safety
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
