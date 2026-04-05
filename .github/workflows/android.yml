@@ -17,27 +17,27 @@ jobs:
       - name: 3. Configurar Flutter (Version Dart 3.7.0)
         uses: subosito/flutter-action@v2
         with:
-          # Usamos la 3.27.0 para cumplir con el SDK ^3.7.0 de tu error
+          # Esta version es la que subira tu Dart de 3.6 a 3.7
           flutter-version: '3.27.0' 
           channel: 'stable'
-          cache: true
+          cache: false # Forzamos descarga limpia
 
       - name: 4. Construccion de Alchemy
         run: |
-          # Aceptamos licencias de Google
+          # Aceptamos licencias
           yes | sdkmanager --licenses || true
           
           # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # Descargamos las librerías (Ahora con Dart 3.7 dara VERDE)
+          # Ahora con Dart 3.7 dara VERDE
           flutter pub get
           
-          # FABRICAMOS EL APK
+          # Fabricamos el APK
           flutter build apk --release --no-tree-shake-icons
 
-      - name: 5. Guardar mi APK
+      - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
           name: Alchemy-Instalador-APK
