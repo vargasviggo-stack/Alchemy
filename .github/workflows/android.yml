@@ -14,24 +14,21 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version Dart 3.7.0)
+      - name: 3. Configurar Flutter (Forzar Dart 3.7+)
         uses: subosito/flutter-action@v2
         with:
           # Esta version es la que subira tu Dart de 3.6 a 3.7
           flutter-version: '3.27.0' 
           channel: 'stable'
-          cache: false # Forzamos descarga limpia
+          cache: false # OBLIGATORIO: Para que no use la 3.6.0 vieja
 
       - name: 4. Construccion de Alchemy
         run: |
-          # Aceptamos licencias
-          yes | sdkmanager --licenses || true
-          
-          # Limpieza profunda
+          # Limpieza profunda de memoria
           rm -f pubspec.lock
           flutter clean
           
-          # Ahora con Dart 3.7 dara VERDE
+          # Ahora con el cambio en el pubspec dara VERDE
           flutter pub get
           
           # Fabricamos el APK
