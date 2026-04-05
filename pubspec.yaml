@@ -38,14 +38,12 @@ dependencies:
   connectivity_plus: ^6.0.2
   country_currency_pickers: ^3.0.0
   crypto: ^3.0.3
-  custom_navigator:
-    path: ./custom_navigator
+  custom_navigator: ^0.5.0
   device_info_plus: ^11.1.0
   draggable_scrollbar: ^0.1.0
   encrypt: ^5.0.3
   envied: ^1.1.1
-  external_path:
-    path: ./external_path
+  external_path: ^1.0.3
   filesize: ^2.0.1
   fluttericon: ^2.0.0
   fluttertoast: ^8.2.4
@@ -91,8 +89,7 @@ dependencies:
   awesome_ripple_animation: ^2.0.0
   liquid_progress_indicator_v2:
     path: ./liquid_progress_indicator_v2
-  figma_squircle:
-    path: ./figma_squircle
+  figma_squircle: ^0.5.1
   open_filex: ^4.7.0
   web_socket_channel: ^3.0.3
 
