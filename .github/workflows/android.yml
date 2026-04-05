@@ -14,28 +14,28 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Forzar descarga limpia)
+      - name: 3. Configurar Flutter (Limpieza Total)
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'any' 
           channel: 'stable'
-          # DESACTIVAMOS EL CACHE: Esto obliga a GitHub a leer tu 2.12.0 nuevo
+          # ESTO ES VITAL: Obliga a GitHub a no usar la memoria vieja
           cache: false 
 
       - name: 4. Construccion Forzada
         run: |
-          # Limpiamos rastro de errores pasados de forma agresiva
-          rm -f pubspec.lock
+          # Borramos CUALQUIER rastro de errores pasados
+          rm -rf pubspec.lock
           flutter clean
           
-          # Ahora GitHub usará tu SDK 2.12.0 y dara VERDE
+          # Ahora GitHub usará tu SDK 2.12.0 y se pondrá en VERDE
           flutter pub get
           
-          # FABRICAMOS EL APK: Ignoramos el error de custom_navigator
+          # FABRICAMOS EL APK: El flag ignora a custom_navigator
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final-APK
+          name: Alchemy-Instalador-APK
           path: build/app/outputs/flutter-apk/app-release.apk
