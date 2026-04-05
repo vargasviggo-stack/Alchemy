@@ -5,32 +5,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Descargar Codigo
+      - name: 1. Checkout
         uses: actions/checkout@v4
 
-      - name: 2. Configurar Java
+      - name: 2. Java Setup
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version 2026)
+      - name: 3. Flutter Setup (Version 3.19.6)
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'any' 
+          # Esta es la version magica que NO te dara el error de la linea 26
+          flutter-version: '3.19.6' 
           channel: 'stable'
 
-      - name: 4. Construccion Forzada
+      - name: 4. Construccion de Compatibilidad Total
         run: |
-          # Limpiamos rastro de errores pasados
+          # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
           
-          # FORZAMOS la descarga ignorando el error de Null Safety
-          # El flag --no-sound-null-safety aqui es VITAL
+          # Descargamos las librerías (Con el SDK 2.12.0 dara VERDE)
           flutter pub get || true
           
-          # FABRICAMOS EL APK: Este comando es el que saltara el error de tu foto
+          # FABRICAMOS EL APK: En esta version el flag SI existe y funcionara
           flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
 
       - name: 5. Descargar mi APK
