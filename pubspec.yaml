@@ -92,8 +92,7 @@ dependencies:
   awesome_ripple_animation: ^2.0.0
   liquid_progress_indicator_v2:
     path: ./liquid_progress_indicator_v2
-  figma_squircle:
-    path: ./figma_squircle
+  figma_squircle: any
   open_filex: ^4.7.0
   web_socket_channel: ^3.0.3
 
