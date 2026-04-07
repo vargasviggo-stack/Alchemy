@@ -80,8 +80,7 @@ dependencies:
   pointycastle: ^3.9.1
   quick_actions: ^1.0.6
   rxdart: ^0.28.0
-  scrobblenaut:
-    path: ./scrobblenaut
+  scrobblenaut: any
   share_plus: ^11.0.0
   spotify: ^0.13.1
   sqflite: ^2.4.2
