@@ -1,4 +1,4 @@
-name: Build Alchemy APK Final
+name: Build Alchemy APK
 on: [workflow_dispatch]
 
 jobs:
@@ -7,6 +7,8 @@ jobs:
     steps:
       - name: 1. Descargar Codigo
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: 2. Configurar Java
         uses: actions/setup-java@v4
@@ -14,28 +16,24 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 3. Configurar Flutter (Version 3.19.6)
+      - name: 3. Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Esta es la version que NO te dara el error de la linea 3
-          flutter-version: '3.19.6' 
+          flutter-version: '3.32.2'
           channel: 'stable'
           cache: false
 
-      - name: 4. Construccion Forzada
+      - name: 4. Instalar dependencias
         run: |
-          # Limpieza profunda
           rm -f pubspec.lock
           flutter clean
-          
-          # Con el SDK 2.12.0 en el pubspec, esto dara VERDE
-          flutter pub get || true
-          
-          # FABRICAMOS EL APK: Este flag "perdona" a custom_navigator
-          flutter build apk --release --no-tree-shake-icons --no-sound-null-safety
+          flutter pub get
 
-      - name: 5. Descargar mi APK
+      - name: 5. Construir APK
+        run: flutter build apk --release --no-tree-shake-icons
+
+      - name: 6. Descargar APK
         uses: actions/upload-artifact@v4
         with:
-          name: Alchemy-Final-APK
+          name: Alchemy-APK
           path: build/app/outputs/flutter-apk/app-release.apk
