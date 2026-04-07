@@ -39,7 +39,7 @@ dependencies:
   country_currency_pickers: ^3.0.0
   crypto: ^3.0.3
   custom_navigator:
-  git:
+   git:
     url: https://github.com/DJDoubleD/custom_navigator
   device_info_plus: ^11.1.0
   draggable_scrollbar: ^0.1.0
